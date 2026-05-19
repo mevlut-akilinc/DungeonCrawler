@@ -7,13 +7,16 @@ private:
     int hp;     // Can
     int attack; // Attack puanı
     int defense;
+protected:
     int x; // Position
     int y; // Position
     int speed;
 
 public:
     Entity(int hp, int attack, int defense, int x, int y, int speed); // Constructor yazıldı.
-    void takeDamage(int dmg);                                         // Kac hasar aldıgı
+    void takeDamage(int dmg);
+    int getX() const { return x; }
+    int getY() const { return y; }                                        // Kac hasar aldıgı
     virtual void update() = 0;                                        // Hareket dinamiği
     virtual void draw(sf::RenderWindow &window) = 0;
 };

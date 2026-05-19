@@ -1,8 +1,30 @@
 #include <SFML/Graphics.hpp>
+#include "Map.h"
+#include "MapGenerator.h"
+#include "Player.h"
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Dungeon Crawler");
+    window.setFramerateLimit(10);
+
+    MapGenerator generator;
+    Map *map = generator.generate(80, 50);
+
+    // Oyuncuyu ilk FLOOR tile'a yerleştir
+    int startX = 0, startY = 0;
+    for (int y = 0; y < 50 && startX == 0; y++)
+        for (int x = 0; x < 80 && startX == 0; x++)
+            if (map->getTile(x, y).getType() == TileType::FLOOR)
+            {
+                startX = x;
+                startY = y;
+            }
+
+    Player player(startX, startY);
+
+    sf::View camera;
+    camera.setSize(1280.f, 800.f);
 
     while (window.isOpen())
     {
@@ -13,9 +35,18 @@ int main()
                 window.close();
         }
 
+        player.handleInput(*map);
+
+        // Kamera oyuncuyu takip et
+        camera.setCenter(player.getX() * 32.f + 16.f, player.getY() * 32.f + 16.f);
+        window.setView(camera);
+
         window.clear(sf::Color::Black);
+        map->draw(window);
+        player.draw(window);
         window.display();
     }
 
+    delete map;
     return 0;
 }

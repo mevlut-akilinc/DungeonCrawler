@@ -34,7 +34,6 @@ public:
     {
         return visible;
     }
-    void draw(sf::RenderWindow &window)
-    {
-    }
+    void draw(sf::RenderWindow &window, int x , int y );
+    TileType getType() const {return type;}
 };
