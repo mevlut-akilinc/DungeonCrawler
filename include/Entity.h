@@ -16,7 +16,9 @@ public:
     Entity(int hp, int attack, int defense, int x, int y, int speed); // Constructor yazıldı.
     void takeDamage(int dmg);
     int getX() const { return x; }
-    int getY() const { return y; }                                        // Kac hasar aldıgı
-    virtual void update() = 0;                                        // Hareket dinamiği
+    int getY() const { return y; }
+    int getHp() const { return hp; }
+    bool isAlive() const { return hp > 0; }
+    virtual void update() = 0;
     virtual void draw(sf::RenderWindow &window) = 0;
 };

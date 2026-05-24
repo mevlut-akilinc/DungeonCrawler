@@ -30,10 +30,12 @@ public:
         return walkable;
     }
 
-    bool isVisible()
-    {
-        return visible;
-    }
+    bool isVisible()  const { return visible; }
+    bool isExplored() const { return explored; }
+
+    void setVisible(bool v)  { visible  = v; }
+    void setExplored(bool e) { explored = e; }
+
     void draw(sf::RenderWindow &window, int x , int y );
-    TileType getType() const {return type;}
+    TileType getType() const { return type; }
 };

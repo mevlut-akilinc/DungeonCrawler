@@ -16,6 +16,7 @@ class Map
     Tile& getTile(int x , int y );
     void setTile(int x, int y, TileType t );
     void draw(sf::RenderWindow &window);
-    void calculateFoV(sf::Vector2i pos, int radius); //Ai destekli yazıldı.
+    void resetVisibility();
+    void calculateFoV(sf::Vector2i pos, int radius);
 
 };

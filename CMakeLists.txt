@@ -13,6 +13,8 @@ add_executable(DungeonCrawler
     src/Map.cpp
     src/MapGenerator.cpp
     src/Entity.cpp
+    src/Enemy.cpp
+    src/EnemyManager.cpp
 )
 
 target_include_directories(DungeonCrawler PRIVATE include)

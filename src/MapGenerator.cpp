@@ -53,6 +53,7 @@ void MapGenerator::createRooms(BSPNode* node, Map& map)
         int roomY = node->area.top  + rand() % (node->area.height - roomH);
 
         node->room = sf::IntRect(roomX, roomY, roomW, roomH);
+        collectedRooms.push_back(node->room); // Oda listesine ekle
 
         for (int y = roomY; y < roomY + roomH; y++)
             for (int x = roomX; x < roomX + roomW; x++)
@@ -104,6 +105,7 @@ void MapGenerator::connectRooms(BSPNode* node, Map& map)
 Map* MapGenerator::generate(int width, int height)
 {
     srand(time(nullptr));
+    collectedRooms.clear(); // Önceki nesil varsa temizle
 
     Map* map = new Map(width, height);
 

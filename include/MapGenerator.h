@@ -1,6 +1,6 @@
 #pragma once
 #include "Map.h"
-#include <memory>
+#include <vector>
 
 struct BSPNode
 {
@@ -15,6 +15,8 @@ class MapGenerator
 private:
     static const int MIN_SIZE = 6;  // Minimum bölünebilir alan
 
+    std::vector<sf::IntRect> collectedRooms; // generate() sırasında doldurulur
+
     void split(BSPNode* node);
     void createRooms(BSPNode* node, Map& map);
     void connectRooms(BSPNode* node, Map& map);
@@ -22,4 +24,7 @@ private:
 
 public:
     Map* generate(int width, int height);
+
+    // Üretilen odaların listesi — düşman yerleştirme için kullanılır
+    const std::vector<sf::IntRect>& getRooms() const { return collectedRooms; }
 };
