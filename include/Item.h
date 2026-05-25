@@ -7,15 +7,10 @@ class Item
 private:
     std::string name;
 
-
-
-
-
 public:
+    Item(std::string name) : name(name) {}
+    virtual ~Item() = default;
 
-    //Constructor
-    Item(std:: string name){} // tipini parantez içinde belirtmen lazım
-    virtual void use (Player& Player) = 0;
-
-
+    std::string getName() const { return name; }
+    virtual void use(Player &player) = 0;
 };

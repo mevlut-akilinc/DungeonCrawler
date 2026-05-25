@@ -1,12 +1,13 @@
 #pragma once
 #include "Item.h"
+#include <iostream>
 
 class Key : public Item
 {
-private:
 public:
-    Key() : Item("Key") {} // Constructor oluşturma islemi
-    void use(Player &Player)
+    Key() : Item("Key") {}
+    void use(Player& player) override
     {
+        std::cout << "Anahtar kilidi sandiklarda kullanilir, kendiliğinden kullanilamaz.\n";
     }
 };

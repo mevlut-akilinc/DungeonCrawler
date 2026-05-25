@@ -9,7 +9,10 @@ class Potion : public Item
     int amount;
 
     public:
-    Potion(std::string name ,int amount): Item (name){} //Constructor oluşturma islemi
-    virtual  void use(Player& Player)= 0;
+    Potion(std::string name, int amount) : Item(name), amount(amount) {}
+    virtual void use(Player& player) = 0;
+
+protected:
+    int getAmount() const { return amount; }
 
 };

@@ -13,8 +13,7 @@ public:
 
     virtual void draw(sf::RenderWindow &window) = 0; // Saf sanal GameObject çizilmiyor varil felan çiziliyor.
 
-    bool isWalkable()
-    {
-        return walkable;
-    }
+    int getX() const;
+    int getY() const;
+    bool isWalkable() const { return walkable; }
 };

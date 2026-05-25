@@ -1,17 +1,27 @@
 #include "EnemyManager.h"
+#include <cmath>
 
 void EnemyManager::addEnemy(Enemy* enemy)
 {
     enemies.push_back(enemy);
 }
 
-void EnemyManager::updateAll(int playerX, int playerY, Map* map)
+int EnemyManager::updateAll(int playerX, int playerY, Map* map)
 {
+    int totalDamage = 0;
     for (Enemy* e : enemies)
     {
         e->setContext(playerX, playerY, map);
-        e->update();
+
+        // Komşuysa saldır, değilse hareket et
+        int dx = std::abs(playerX - e->getX());
+        int dy = std::abs(playerY - e->getY());
+        if ((dx + dy) == 1)
+            totalDamage += e->calculateAttackDamage();
+        else
+            e->update();
     }
+    return totalDamage;
 }
 
 void EnemyManager::drawAll(sf::RenderWindow& window, Map* map)
@@ -40,9 +50,21 @@ void EnemyManager::removeDeadEnemies()
     }
 }
 
-EnemyManager::~EnemyManager()
+void EnemyManager::clear()
+{
+    for (Enemy* e : enemies) delete e;
+    enemies.clear();
+}
+
+Enemy* EnemyManager::getEnemyAt(int x, int y)
 {
     for (Enemy* e : enemies)
-        delete e;
-    enemies.clear();
+        if (e->isAlive() && e->getX() == x && e->getY() == y)
+            return e;
+    return nullptr;
+}
+
+EnemyManager::~EnemyManager()
+{
+    clear();
 }

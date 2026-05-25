@@ -9,13 +9,17 @@ private:
 public:
     void addEnemy(Enemy* enemy);
 
-    // Her tur: oyuncu konumunu ve haritayı al, tüm düşmanları güncelle
-    void updateAll(int playerX, int playerY, Map* map);
+    // Her tur: düşmanları güncelle, komşu düşmanların toplam saldırı hasarını döndür
+    int updateAll(int playerX, int playerY, Map* map);
 
     // FoV kontrolü dahil: sadece görünür düşmanları çiz
     void drawAll(sf::RenderWindow& window, Map* map);
 
     void removeDeadEnemies();
+    void clear();   // Yeni kat geçişinde tüm düşmanları sil
+
+    // Verilen koordinatta düşman varsa pointer döndür, yoksa nullptr
+    Enemy* getEnemyAt(int x, int y);
 
     ~EnemyManager();
 };

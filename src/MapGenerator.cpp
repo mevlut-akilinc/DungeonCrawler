@@ -113,8 +113,17 @@ Map* MapGenerator::generate(int width, int height)
     root->area = sf::IntRect(0, 0, width, height);
 
     split(root);
-    createRooms(root, *map);   // * ekledik
-    connectRooms(root, *map);  // * ekledik
+    createRooms(root, *map);
+    connectRooms(root, *map);
+
+    // Son odanın merkezine merdiven koy
+    if (!collectedRooms.empty())
+    {
+        const sf::IntRect& lastRoom = collectedRooms.back();
+        int stairX = lastRoom.left + lastRoom.width  / 2;
+        int stairY = lastRoom.top  + lastRoom.height / 2;
+        map->setTile(stairX, stairY, TileType::STAIRS);
+    }
 
     return map;
 }

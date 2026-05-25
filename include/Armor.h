@@ -1,17 +1,16 @@
 #pragma once
 #include "Item.h"
-#include <iostream>
-
+#include "Player.h"
 
 class Armor : public Item
 {
-    private:
-    int defencebonus = 4;
+private:
+    int defenseBonus;
 
-    public:
-    Armor() : Item("Armor"){}
-    void use(Player& Player) override{
-
+public:
+    Armor() : Item("Armor"), defenseBonus(4) {}
+    void use(Player& player) override
+    {
+        player.setDefense(player.getDefense() + defenseBonus);
     }
-
 };

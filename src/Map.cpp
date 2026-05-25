@@ -1,4 +1,6 @@
 #include "Map.h"
+#include "NormalChest.h"
+#include "LockedChest.h"
 
 Map::Map(int width, int height)
 {
@@ -24,6 +26,11 @@ void Map::draw(sf::RenderWindow& window)
     for (int y = 0; y < height; y++)
         for (int x = 0; x < width; x++)
             grid[y][x].draw(window, x, y);
+
+    // FoV içindeki chest'leri çiz
+    for (Chest* c : chests)
+        if (grid[c->getY()][c->getX()].isVisible())
+            c->draw(window);
 }
 
 void Map::resetVisibility()
@@ -112,7 +119,6 @@ void Map::calculateFoV(sf::Vector2i pos, int radius)
     }
 
     // 8 oktant için dönüşüm çarpanları
-    // Sütunlar: xx, xy, yx, yy
     static const int mult[4][8] = {
         { 1,  0,  0, -1, -1,  0,  0,  1 },
         { 0,  1, -1,  0,  0, -1,  1,  0 },
@@ -123,4 +129,36 @@ void Map::calculateFoV(sf::Vector2i pos, int radius)
     for (int oct = 0; oct < 8; oct++)
         castLight(grid, width, height, pos.x, pos.y, 1, 1.0f, 0.0f,
                   radius, mult[0][oct], mult[1][oct], mult[2][oct], mult[3][oct]);
+}
+
+void Map::addChest(Chest* chest)
+{
+    chests.push_back(chest);
+}
+
+Chest* Map::getChestAt(int x, int y)
+{
+    for (Chest* c : chests)
+        if (c->getX() == x && c->getY() == y) return c;
+    return nullptr;
+}
+
+void Map::placeItem(int x, int y, Item* item)
+{
+    itemsOnGround[{x, y}] = item;
+}
+
+Item* Map::pickupItem(int x, int y)
+{
+    auto it = itemsOnGround.find({x, y});
+    if (it == itemsOnGround.end()) return nullptr;
+    Item* item = it->second;
+    itemsOnGround.erase(it);
+    return item;
+}
+
+Map::~Map()
+{
+    for (auto& pair : itemsOnGround) delete pair.second;
+    for (Chest* c : chests)         delete c;
 }

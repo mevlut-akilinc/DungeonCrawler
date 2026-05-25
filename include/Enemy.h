@@ -1,25 +1,33 @@
 #pragma once
 #include "Entity.h"
-class Map; // Enemy harita bilgisine pointer üzerinden erişir
+#include <functional>
+#include <string>
+class Map;
 
 class Enemy : public Entity
 {
 protected:
-    int playerX = 0; // AI'nin hedef koordinatları (EnemyManager tarafından set edilir)
+    int playerX = 0;
     int playerY = 0;
     Map* map = nullptr;
+
+    // Düşman oyuncuya komşu mu? (Manhattan mesafe == 1)
+    bool isAdjacentToPlayer() const
+    {
+        int dx = std::abs(playerX - x);
+        int dy = std::abs(playerY - y);
+        return (dx + dy) == 1;
+    }
 
 public:
     Enemy(int hp, int attack, int defense, int speed, int x, int y);
 
-    // EnemyManager her tur önce bu fonksiyonu çağırır, sonra update() çağırır
     void setContext(int px, int py, Map* m);
 
-    // Alt sınıflar kendi AI davranışını burada tanımlar
     virtual void updateAI() = 0;
 
-    void update() override
-    {
-        updateAI();
-    }
+    // Düşman saldırı sonucu: hasar değeri döndürür (main.cpp bunu player'a uygular)
+    int calculateAttackDamage() const { return getAttack(); }
+
+    void update() override { updateAI(); }
 };

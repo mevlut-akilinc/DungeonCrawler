@@ -17,8 +17,14 @@ public:
     void takeDamage(int dmg);
     int getX() const { return x; }
     int getY() const { return y; }
-    int getHp() const { return hp; }
-    bool isAlive() const { return hp > 0; }
+    int getHp()      const { return hp; }
+    int getAttack()  const { return attack; }
+    int getDefense() const { return defense; }
+    bool isAlive()   const { return hp > 0; }
+
+    void setHp(int v)      { hp      = (v > 0 ? v : 0); }
+    void setAttack(int v)  { attack  = v; }
+    void setDefense(int v) { defense = v; }
     virtual void update() = 0;
     virtual void draw(sf::RenderWindow &window) = 0;
 };
