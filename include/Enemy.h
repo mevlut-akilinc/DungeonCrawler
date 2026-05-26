@@ -24,7 +24,9 @@ public:
 
     void setContext(int px, int py, Map* m);
 
-    virtual void updateAI() = 0;
+    virtual void        updateAI()  = 0;
+    virtual int         getTypeId() const = 0;
+    virtual std::string getName()   const = 0;
 
     // Düşman saldırı sonucu: hasar değeri döndürür (main.cpp bunu player'a uygular)
     int calculateAttackDamage() const { return getAttack(); }

@@ -1,27 +1,44 @@
 #include "EnemyManager.h"
+#include "Player.h"
 #include <cmath>
+#include <algorithm>
 
 void EnemyManager::addEnemy(Enemy* enemy)
 {
     enemies.push_back(enemy);
 }
 
-int EnemyManager::updateAll(int playerX, int playerY, Map* map)
+void EnemyManager::updateAll(int playerX, int playerY, Map* map)
 {
-    int totalDamage = 0;
     for (Enemy* e : enemies)
     {
         e->setContext(playerX, playerY, map);
 
-        // Komşuysa saldır, değilse hareket et
         int dx = std::abs(playerX - e->getX());
         int dy = std::abs(playerY - e->getY());
-        if ((dx + dy) == 1)
-            totalDamage += e->calculateAttackDamage();
-        else
+        if ((dx + dy) != 1)  // komşu değilse hareket et
             e->update();
+        // komşuysa yerinde dur — saldırı attackPlayer'da
     }
-    return totalDamage;
+}
+
+int EnemyManager::attackPlayer(Player& player,
+                               std::function<void(const std::string&)> addMsg)
+{
+    int totalNet = 0;
+    for (Enemy* e : enemies)
+    {
+        int dx = std::abs(player.getX() - e->getX());
+        int dy = std::abs(player.getY() - e->getY());
+        if ((dx + dy) != 1) continue;
+
+        int raw = e->calculateAttackDamage();
+        int net = std::max(1, raw - player.getDefense());
+        player.setHp(player.getHp() - net);
+        addMsg(e->getName() + " sana " + std::to_string(net) + " hasar verdi!");
+        totalNet += net;
+    }
+    return totalNet;
 }
 
 void EnemyManager::drawAll(sf::RenderWindow& window, Map* map)

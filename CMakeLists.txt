@@ -16,7 +16,9 @@ add_executable(DungeonCrawler
     src/Enemy.cpp
     src/EnemyManager.cpp
     src/SaveManager.cpp
+    src/Player.cpp
     src/GameObject.cpp
+    src/Inventory.cpp
 )
 
 target_include_directories(DungeonCrawler PRIVATE include)

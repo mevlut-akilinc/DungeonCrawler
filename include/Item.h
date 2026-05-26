@@ -13,4 +13,10 @@ public:
 
     std::string getName() const { return name; }
     virtual void use(Player &player) = 0;
+
+    // Silah / zırh gibi kuşanılabilir eşyalar true döndürür
+    virtual bool isEquippable()          const { return false; }
+    // Kuşanma / çıkarma — varsayılan: hiçbir şey yapmaz
+    virtual void equip(Player& /*player*/)   {}
+    virtual void unequip(Player& /*player*/) {}
 };

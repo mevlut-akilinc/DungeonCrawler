@@ -1,3 +1,6 @@
+// Game.h — tanımlı fakat kullanılmıyor; main.cpp doğrudan game loop çalıştırıyor.
+// Refactor maliyetli olduğundan şimdilik pasif bırakıldı.
+/*
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Map.h"
@@ -24,3 +27,4 @@ public:
     void update();
     void render();
 };
+*/

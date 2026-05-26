@@ -12,12 +12,18 @@ class Player : public Entity
 private:
     Inventory inventory;
     int maxHp;
+    Item* equippedWeapon = nullptr;  // Kuşanılmış silah (envanterden SİLİNMEZ)
 
 public:
-    Player(int x, int y) : Entity(50, 10, 3, x, y, 1), maxHp(50) {}
+    Player(int x, int y);   // src/Player.cpp'de tanımlı (Dagger + HealthPotion ekleniyor)
 
-    Inventory& getInventory() { return inventory; }
+    Inventory&       getInventory()       { return inventory; }
+    const Inventory& getInventory() const { return inventory; }
     int getMaxHp() const { return maxHp; }
+
+    // Kuşanılmış silah erişimi — Inventory::useItem tarafından yönetilir
+    Item* getEquippedWeapon() const          { return equippedWeapon; }
+    void  setEquippedWeapon(Item* w)         { equippedWeapon = w; }
 
     // WASD: hareket veya bump-to-attack. addMsg ile mesaj gönderir.
     // true döner → düşman turu tetiklenir

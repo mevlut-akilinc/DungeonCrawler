@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <string>
 #include "Item.h"
 
 class Player;
@@ -26,18 +27,21 @@ public:
         return true;
     }
 
-    void useItem(int index, Player& player)
-    {
-        if (index < 0 || index >= (int)items.size()) return;
-        items[index]->use(player);   // polymorphism — hangi item olduğu önemli değil
-        removeItem(index);
-    }
+    // Döndürdüğü string addMsg'ye geçilir; boşsa mesaj yok
+    // Gövde src/Inventory.cpp'de — Player'ın tam tanımını oradan alır
+    std::string useItem(int index, Player& player);
 
     void removeItem(int index)
     {
         if (index < 0 || index >= (int)items.size()) return;
         delete items[index];
         items.erase(items.begin() + index);
+    }
+
+    void clear()
+    {
+        for (Item* item : items) delete item;
+        items.clear();
     }
 
     void display() const

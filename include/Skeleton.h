@@ -6,6 +6,8 @@ class Skeleton : public Enemy
 {
 public:
     Skeleton(int x, int y) : Enemy(10, 5, 2, 6, x, y) {}
+    int         getTypeId() const override { return 1; }
+    std::string getName()   const override { return "Iskelet"; }
 
     void draw(sf::RenderWindow& window) override
     {

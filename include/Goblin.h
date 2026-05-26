@@ -6,6 +6,8 @@ class Goblin : public Enemy
 {
 public:
     Goblin(int x, int y) : Enemy(30, 8, 5, 4, x, y) {}
+    int         getTypeId() const override { return 0; }
+    std::string getName()   const override { return "Goblin"; }
 
     void draw(sf::RenderWindow& window) override
     {

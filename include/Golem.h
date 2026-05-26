@@ -6,7 +6,9 @@ class Golem : public Enemy
 {
     int turnCounter = 0; // Golem yavaş: her 2 turda bir hareket eder (speed=1)
 public:
-    Golem(int x, int y) : Enemy(60, 12, 3, 1, x, y) {}
+    Golem(int x, int y) : Enemy(60, 9, 3, 1, x, y) {}
+    int         getTypeId() const override { return 2; }
+    std::string getName()   const override { return "Golem"; }
 
     void draw(sf::RenderWindow& window) override
     {

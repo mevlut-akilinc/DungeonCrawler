@@ -102,10 +102,21 @@ void MapGenerator::connectRooms(BSPNode* node, Map& map)
     connectRooms(node->right, map);
 }
 
+void MapGenerator::deleteTree(BSPNode* node)
+{
+    if (!node) return;
+    deleteTree(node->left);
+    deleteTree(node->right);
+    delete node;
+}
+
 Map* MapGenerator::generate(int width, int height)
 {
-    srand(time(nullptr));
-    collectedRooms.clear(); // Önceki nesil varsa temizle
+    // Her kat için rand() ile ayrı seed al — srand(time) kaldırıldı (main'de bir kez çağrılıyor)
+    lastSeed = (unsigned int)rand();
+    srand(lastSeed);
+
+    collectedRooms.clear();
 
     Map* map = new Map(width, height);
 
@@ -125,5 +136,6 @@ Map* MapGenerator::generate(int width, int height)
         map->setTile(stairX, stairY, TileType::STAIRS);
     }
 
+    deleteTree(root);
     return map;
 }
