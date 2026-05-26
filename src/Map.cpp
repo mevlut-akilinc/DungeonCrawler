@@ -1,6 +1,8 @@
 #include "Map.h"
 #include "NormalChest.h"
 #include "LockedChest.h"
+#include "TextureManager.h"
+#include <unordered_map>
 
 Map::Map(int width, int height)
 {
@@ -21,11 +23,38 @@ void Map::setTile(int x, int y, TileType t)
     grid[y][x] = Tile(t, walkable);
 }
 
+// Item ismi → tilemap IntRect (col*16, row*16, 16, 16)
+static sf::IntRect itemRect(const std::string& name)
+{
+    if (name == "Sword")        return sf::IntRect(528, 128, 16, 16); // (33,8)
+    if (name == "Mace")         return sf::IntRect(528,  64, 16, 16); // (33,4)
+    if (name == "Dagger")       return sf::IntRect(512,  96, 16, 16); // (32,6)
+    if (name == "Armor")        return sf::IntRect(576,  64, 16, 16); // (36,4)
+    if (name == "Key")          return sf::IntRect(512, 176, 16, 16); // (32,11)
+    if (name == "HealthPotion") return sf::IntRect(656, 176, 16, 16); // (41,11)
+    if (name == "ShieldPotion") return sf::IntRect(672, 176, 16, 16); // (42,11)
+    return sf::IntRect(352, 64, 16, 16); // (22,4) altın para (bilinmeyen item)
+}
+
 void Map::draw(sf::RenderWindow& window)
 {
     for (int y = 0; y < height; y++)
         for (int x = 0; x < width; x++)
             grid[y][x].draw(window, x, y);
+
+    // FoV içindeki yerdeki itemleri çiz
+    sf::Texture& tex = TextureManager::instance().get("assets/tilemap.png");
+    for (const auto& pair : itemsOnGround)
+    {
+        int ix = pair.first.first;
+        int iy = pair.first.second;
+        if (!grid[iy][ix].isVisible()) continue;
+
+        sf::Sprite sprite(tex, itemRect(pair.second->getName()));
+        sprite.setScale(2.f, 2.f);
+        sprite.setPosition(ix * 32.f, iy * 32.f);
+        window.draw(sprite);
+    }
 
     // FoV içindeki chest'leri çiz
     for (Chest* c : chests)

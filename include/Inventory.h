@@ -38,6 +38,15 @@ public:
         items.erase(items.begin() + index);
     }
 
+    // Item'ı envanterden çıkar ama SİLME — pointer'ı döndürür (yere bırakma için)
+    Item* takeItem(int index)
+    {
+        if (index < 0 || index >= (int)items.size()) return nullptr;
+        Item* item = items[index];
+        items.erase(items.begin() + index);
+        return item;
+    }
+
     void clear()
     {
         for (Item* item : items) delete item;

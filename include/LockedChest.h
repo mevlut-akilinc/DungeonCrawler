@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Mace.h"
 #include "ShieldPotion.h"
+#include "TextureManager.h"
 #include <functional>
 #include <string>
 
@@ -50,10 +51,11 @@ public:
 
     void draw(sf::RenderWindow& window) override
     {
-        sf::RectangleShape shape(sf::Vector2f(28.f, 28.f));
-        // Kilitli → mor, açık → koyu mor
-        shape.setFillColor(opened ? sf::Color(60, 30, 80) : sf::Color(150, 60, 200));
-        shape.setPosition(getX() * 32.f + 2.f, getY() * 32.f + 2.f);
-        window.draw(shape);
+        sf::Sprite sprite(TextureManager::instance().get("assets/tilemap.png"),
+                          sf::IntRect(144, 112, 16, 16)); // (9,7) kilitli sandık
+        sprite.setScale(2.f, 2.f);
+        sprite.setPosition(getX() * 32.f, getY() * 32.f);
+        sprite.setColor(opened ? sf::Color(100, 100, 100) : sf::Color(180, 140, 255));
+        window.draw(sprite);
     }
 };

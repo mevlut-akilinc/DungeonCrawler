@@ -4,6 +4,7 @@
 #include "HealthPotion.h"
 #include "Sword.h"
 #include "Armor.h"
+#include "TextureManager.h"
 #include <functional>
 #include <string>
 #include <cstdlib>
@@ -38,10 +39,13 @@ public:
 
     void draw(sf::RenderWindow& window) override
     {
-        sf::RectangleShape shape(sf::Vector2f(28.f, 28.f));
-        shape.setFillColor(opened ? sf::Color(80, 50, 20) : sf::Color(180, 120, 40));
-        shape.setPosition(getX() * 32.f + 2.f, getY() * 32.f + 2.f);
-        window.draw(shape);
+        // Açıksa (8,7), kapalıysa (8,7) — renk tonu ile ayırt
+        sf::Sprite sprite(TextureManager::instance().get("assets/tilemap.png"),
+                          sf::IntRect(128, 112, 16, 16)); // (8,7) normal sandık
+        sprite.setScale(2.f, 2.f);
+        sprite.setPosition(getX() * 32.f, getY() * 32.f);
+        sprite.setColor(opened ? sf::Color(120, 80, 50) : sf::Color::White);
+        window.draw(sprite);
     }
 
     bool isOpened() const { return opened; }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include "Map.h"
+#include "TextureManager.h"
 
 class Goblin : public Enemy
 {
@@ -11,10 +12,11 @@ public:
 
     void draw(sf::RenderWindow& window) override
     {
-        sf::RectangleShape shape(sf::Vector2f(32.f, 32.f));
-        shape.setFillColor(sf::Color(0, 180, 0)); // Yeşil
-        shape.setPosition(x * 32.f, y * 32.f);
-        window.draw(shape);
+        sf::Sprite sprite(TextureManager::instance().get("assets/tilemap.png"),
+                          sf::IntRect(320, 144, 16, 16)); // (20,9) yeşil boynuzlu goblin
+        sprite.setScale(2.f, 2.f);
+        sprite.setPosition(x * 32.f, y * 32.f);
+        window.draw(sprite);
     }
 
     void updateAI() override

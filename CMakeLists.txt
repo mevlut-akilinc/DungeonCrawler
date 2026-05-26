@@ -19,6 +19,16 @@ add_executable(DungeonCrawler
     src/Player.cpp
     src/GameObject.cpp
     src/Inventory.cpp
+    src/TextureManager.cpp
+    src/HUD.cpp
+    src/FloorFactory.cpp
+    src/InputHandler.cpp
+    src/Menu.cpp
+)
+
+add_custom_command(TARGET DungeonCrawler POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:DungeonCrawler>/assets
 )
 
 target_include_directories(DungeonCrawler PRIVATE include)

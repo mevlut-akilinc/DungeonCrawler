@@ -3,6 +3,7 @@
 #include "Map.h"
 #include "Inventory.h"
 #include "EnemyManager.h"
+#include "TextureManager.h"
 #include <functional>
 #include <string>
 #include <algorithm>
@@ -64,6 +65,11 @@ public:
 
     void teleport(int newX, int newY) { x = newX; y = newY; }
 
+    // Oyunu yeniden başlatırken player'ı güvenli şekilde sıfırla.
+    // (player = Player(0,0) yapma — shallow copy inventory pointer'larını bozar.)
+    // Tanımı src/Player.cpp'de (HealthPotion / Dagger include'ları orada)
+    void reset();
+
     // Oyuncunun üzerinde durduğu tile STAIRS mi?
     bool isOnStairs(Map& map) const
     {
@@ -78,10 +84,11 @@ public:
 
     void draw(sf::RenderWindow& window) override
     {
-        sf::RectangleShape shape(sf::Vector2f(32.f, 32.f));
-        shape.setFillColor(sf::Color::Yellow);
-        shape.setPosition(x * 32.f, y * 32.f);
-        window.draw(shape);
+        sf::Sprite sprite(TextureManager::instance().get("assets/tilemap.png"),
+                          sf::IntRect(400, 0, 16, 16)); // (25,0) knight
+        sprite.setScale(2.f, 2.f);
+        sprite.setPosition(x * 32.f, y * 32.f);
+        window.draw(sprite);
     }
 
     void update() override {}
