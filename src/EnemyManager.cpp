@@ -34,7 +34,7 @@ int EnemyManager::attackPlayer(Player& player,
 
         int raw = e->calculateAttackDamage();
         int net = std::max(1, raw - player.getDefense());
-        player.setHp(player.getHp() - net);
+        player.takeDamage(net); // hp düşür + hitFlash tetikle
         addMsg(e->getName() + " sana " + std::to_string(net) + " hasar verdi!");
         totalNet += net;
     }
@@ -71,6 +71,11 @@ void EnemyManager::clear()
 {
     for (Enemy* e : enemies) delete e;
     enemies.clear();
+}
+
+void EnemyManager::tickHitFlashes()
+{
+    for (Enemy* e : enemies) e->tickHitFlash();
 }
 
 Enemy* EnemyManager::getEnemyAt(int x, int y)

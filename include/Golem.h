@@ -18,6 +18,7 @@ public:
         sprite.setScale(2.f, 2.f);
         sprite.setPosition(x * 32.f, y * 32.f);
         window.draw(sprite);
+        drawHitFlashOverlay(window);
     }
 
     void updateAI() override

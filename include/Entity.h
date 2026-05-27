@@ -11,6 +11,7 @@ protected:
     int x; // Position
     int y; // Position
     int speed;
+    int hitFlashTimer = 0; // hasar aldığında 0'dan büyük; her frame azalır
 
 public:
     Entity(int hp, int attack, int defense, int x, int y, int speed); // Constructor yazıldı.
@@ -25,6 +26,25 @@ public:
     void setHp(int v)      { hp      = (v > 0 ? v : 0); }
     void setAttack(int v)  { attack  = v; }
     void setDefense(int v) { defense = v; }
+
+    // Hit-flash zamanlayıcısı: hasar alındığında dolar, her frame azalır
+    void triggerHitFlash()  { hitFlashTimer = 4; }
+    int  getHitFlash() const { return hitFlashTimer; }
+    void tickHitFlash()      { if (hitFlashTimer > 0) --hitFlashTimer; }
+
+    // Sprite üstüne çizilecek kırmızı overlay (timer=0 ise tamamen şeffaf)
+    // Türetilmiş sınıflar draw() içinde window.draw(sprite) sonrası çağırır.
+    void drawHitFlashOverlay(sf::RenderWindow& window) const
+    {
+        if (hitFlashTimer <= 0) return;
+        // alpha: 4→220, 3→170, 2→120, 1→70 (gittikçe solan parlak kırmızı)
+        sf::Uint8 alpha = static_cast<sf::Uint8>(20 + hitFlashTimer * 50);
+        sf::RectangleShape overlay(sf::Vector2f(32.f, 32.f));
+        overlay.setPosition(x * 32.f, y * 32.f);
+        overlay.setFillColor(sf::Color(255, 40, 40, alpha));
+        window.draw(overlay);
+    }
+
     virtual void update() = 0;
     virtual void draw(sf::RenderWindow &window) = 0;
 };

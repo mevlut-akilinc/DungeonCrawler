@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <algorithm>
 
 #include "GameConstants.h"
 #include "Map.h"
@@ -14,6 +15,7 @@
 #include "SaveManager.h"
 #include "HUD.h"
 #include "Menu.h"
+#include "DamageFeedback.h"
 
 using namespace GameConstants;
 
@@ -169,6 +171,9 @@ int main()
     sf::Vector2i skipPickupAt(-1, -1);
     sf::Vector2i lastPos(player.getX(), player.getY());
 
+    // Hasar geri bildirimi (sarsıntı + vignette) — kendi modülünde
+    DamageFeedback damageFx;
+
     // ── Oyun döngüsü ──
     while (window.isOpen())
     {
@@ -212,7 +217,10 @@ int main()
             enemyManager.updateAll(player.getX(), player.getY(), map);
             int netDmg = enemyManager.attackPlayer(player, addMsg);
             if (netDmg > 0)
+            {
                 tookDamageThisFrame = true;
+                damageFx.trigger();
+            }
             enemyManager.removeDeadEnemies();
         }
 
@@ -229,8 +237,9 @@ int main()
         }
 
         // 7) Render
-        camera.setCenter(player.getX() * TILE_SIZE + TILE_SIZE / 2.f,
-                         player.getY() * TILE_SIZE + TILE_SIZE / 2.f);
+        sf::Vector2f shake = damageFx.computeShakeOffset();
+        camera.setCenter(player.getX() * TILE_SIZE + TILE_SIZE / 2.f + shake.x,
+                         player.getY() * TILE_SIZE + TILE_SIZE / 2.f + shake.y);
         window.setView(camera);
 
         window.clear(sf::Color::Black);
@@ -238,14 +247,11 @@ int main()
         enemyManager.drawAll(window, map);
         player.draw(window);
 
-        // Hasar flash
-        if (tookDamageThisFrame)
-        {
-            sf::RectangleShape flash(sf::Vector2f(TILE_SIZE, TILE_SIZE));
-            flash.setFillColor(sf::Color(255, 0, 0, 130));
-            flash.setPosition(player.getX() * TILE_SIZE, player.getY() * TILE_SIZE);
-            window.draw(flash);
-        }
+        damageFx.drawVignette(window, WINDOW_W, WINDOW_H, camera);
+
+        // Tüm entity hit-flash zamanlayıcılarını bir adım azalt (renk solar)
+        player.tickHitFlash();
+        enemyManager.tickHitFlashes();
 
         hud.draw(window, player, messages);
         window.display();

@@ -24,6 +24,7 @@ add_executable(DungeonCrawler
     src/FloorFactory.cpp
     src/InputHandler.cpp
     src/Menu.cpp
+    src/DamageFeedback.cpp
 )
 
 add_custom_command(TARGET DungeonCrawler POST_BUILD

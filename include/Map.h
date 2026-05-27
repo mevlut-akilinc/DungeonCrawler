@@ -20,6 +20,9 @@ public:
     Map(int width, int height);
     Tile& getTile(int x, int y);
     void setTile(int x, int y, TileType t);
+    int  getWidth()  const { return width; }
+    int  getHeight() const { return height; }
+    bool inBounds(int x, int y) const { return x >= 0 && x < width && y >= 0 && y < height; }
     void draw(sf::RenderWindow& window);
     void resetVisibility();
     void calculateFoV(sf::Vector2i pos, int radius);

@@ -28,6 +28,9 @@ public:
     void removeDeadEnemies();
     void clear(); // Yeni kat geçişinde tüm düşmanları sil
 
+    // Hit-flash zamanlayıcılarını her frame bir adım azalt
+    void tickHitFlashes();
+
     // Verilen koordinatta düşman varsa pointer döndür, yoksa nullptr
     Enemy *getEnemyAt(int x, int y);
 

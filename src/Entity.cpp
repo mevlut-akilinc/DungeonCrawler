@@ -14,4 +14,5 @@ void Entity::takeDamage(int dmg)
 {
     hp -= dmg;
     if (hp < 0) hp = 0;
+    triggerHitFlash();
 }

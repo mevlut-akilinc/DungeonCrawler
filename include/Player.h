@@ -42,6 +42,10 @@ public:
 
         if (!keyPressed) return false;
 
+        // Harita sınırı dışına çıkma — turu da harcatma (hiç hareket olmadı)
+        if (!map.inBounds(newX, newY))
+            return false;
+
         // Hedef karede düşman var mı?
         Enemy* target = em.getEnemyAt(newX, newY);
         if (target)
@@ -89,6 +93,7 @@ public:
         sprite.setScale(2.f, 2.f);
         sprite.setPosition(x * 32.f, y * 32.f);
         window.draw(sprite);
+        drawHitFlashOverlay(window);
     }
 
     void update() override {}
