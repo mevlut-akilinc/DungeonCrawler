@@ -59,12 +59,12 @@ void HUD::drawControls(sf::RenderWindow& window)
 void HUD::drawStatsPanel(sf::RenderWindow& window, const Player& player)
 {
     const float panelX = 530.f;
-    const float panelY = 468.f;
+    const float panelY = 434.f;
     const float barW   = 160.f;
     const float barH   = 12.f;
 
     // Panel arka planı
-    sf::RectangleShape panel(sf::Vector2f(266.f, 128.f));
+    sf::RectangleShape panel(sf::Vector2f(266.f, 162.f));
     panel.setFillColor(sf::Color(0, 0, 0, 170));
     panel.setPosition(panelX - 4.f, panelY - 4.f);
     window.draw(panel);
@@ -112,31 +112,57 @@ void HUD::drawStatsPanel(sf::RenderWindow& window, const Player& player)
     defTxt.setPosition(panelX, panelY + 18.f);
     window.draw(defTxt);
 
-    // ATK göstergesi
+    // Kuşanılmış silah — sağda kare kutu, envanter satırının üstünde
+    const float eqBoxW = 48.f;
+    const float eqBoxH = 36.f;
+    const float eqBoxX = panelX + 4.f * 52.f;  // 5. slotun üstü
+    const float eqBoxY = panelY + 50.f;
+
+    // ATK göstergesi — ELDE kutusu ile aynı dikey hizada
     sf::Text atkTxt;
     atkTxt.setFont(font_); atkTxt.setCharacterSize(10);
     atkTxt.setString("ATK " + std::to_string(player.getAttack()));
     atkTxt.setFillColor(sf::Color(255, 200, 80));
-    atkTxt.setPosition(panelX, panelY + 36.f);
+    atkTxt.setPosition(panelX, eqBoxY + (eqBoxH - 10.f) * 0.5f);
     window.draw(atkTxt);
 
-    // Kuşanılmış silah
-    sf::Text wpTxt;
-    wpTxt.setFont(font_); wpTxt.setCharacterSize(10);
-    std::string wpStr = "Silah: -";
-    if (player.getEquippedWeapon())
-        wpStr = "Silah: " + player.getEquippedWeapon()->getName();
-    wpTxt.setString(wpStr);
-    wpTxt.setFillColor(sf::Color(180, 255, 180));
-    wpTxt.setPosition(panelX, panelY + 54.f);
-    window.draw(wpTxt);
+    bool hasWeapon = (player.getEquippedWeapon() != nullptr);
+
+    sf::RectangleShape eqBox(sf::Vector2f(eqBoxW, eqBoxH));
+    eqBox.setFillColor(hasWeapon ? sf::Color(50, 45, 10) : sf::Color(30, 30, 30));
+    eqBox.setOutlineThickness(2.f);
+    eqBox.setOutlineColor(hasWeapon ? sf::Color(255, 210, 0) : sf::Color(120, 120, 120));
+    eqBox.setPosition(eqBoxX, eqBoxY);
+    window.draw(eqBox);
+
+    sf::Text eqLabel;
+    eqLabel.setFont(font_); eqLabel.setCharacterSize(9);
+    eqLabel.setString("ELDE");
+    eqLabel.setFillColor(sf::Color(180, 180, 180));
+    {
+        auto b = eqLabel.getLocalBounds();
+        eqLabel.setPosition(eqBoxX + (eqBoxW - b.width) * 0.5f, eqBoxY + 3.f);
+    }
+    window.draw(eqLabel);
+
+    sf::Text eqName;
+    eqName.setFont(font_); eqName.setCharacterSize(9);
+    std::string wn = hasWeapon ? player.getEquippedWeapon()->getName() : "-";
+    if (wn.size() > 6) wn = wn.substr(0, 6);
+    eqName.setString(wn);
+    eqName.setFillColor(hasWeapon ? sf::Color(255, 210, 0) : sf::Color(160, 160, 160));
+    {
+        auto b = eqName.getLocalBounds();
+        eqName.setPosition(eqBoxX + (eqBoxW - b.width) * 0.5f, eqBoxY + eqBoxH - 18.f);
+    }
+    window.draw(eqName);
 
     // Envanter slotları 1–5
     const auto& items = player.getInventory().getItems();
     for (int i = 0; i < 5; i++)
     {
         float slotX = panelX + i * 52.f;
-        float slotY = panelY + 72.f;
+        float slotY = panelY + 100.f;
 
         bool isEquipped = (i < (int)items.size() &&
                            player.getEquippedWeapon() == items[i]);

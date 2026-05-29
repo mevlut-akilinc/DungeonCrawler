@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "EnemyManager.h"
 #include "TextureManager.h"
+#include "SoundManager.h"
 #include <functional>
 #include <string>
 #include <algorithm>
@@ -52,6 +53,7 @@ public:
         {
             int dmg = std::max(1, getAttack() - target->getDefense());
             target->takeDamage(dmg);
+            SoundManager::instance().play("assets/audio/sfx/hit_player.ogg", 55.f);
             addMsg(target->isAlive()
                 ? "Dusmana " + std::to_string(dmg) + " hasar verdin!"
                 : "Dusmaní yok ettin!");

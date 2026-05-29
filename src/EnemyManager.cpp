@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include "Player.h"
+#include "SoundManager.h"
 #include <cmath>
 #include <algorithm>
 
@@ -35,6 +36,7 @@ int EnemyManager::attackPlayer(Player& player,
         int raw = e->calculateAttackDamage();
         int net = std::max(1, raw - player.getDefense());
         player.takeDamage(net); // hp düşür + hitFlash tetikle
+        SoundManager::instance().play("assets/audio/sfx/hit_enemy.ogg", 100.f);
         addMsg(e->getName() + " sana " + std::to_string(net) + " hasar verdi!");
         totalNet += net;
     }

@@ -16,6 +16,13 @@
 #include "HUD.h"
 #include "Menu.h"
 #include "DamageFeedback.h"
+#include "MusicManager.h"
+#include "SoundManager.h"
+
+static const std::string MUSIC_MENU = "assets/audio/music/menu.ogg";
+static const std::string MUSIC_GAME = "assets/audio/music/play.ogg";
+static const std::string SFX_HIT_ENEMY  = "assets/audio/sfx/hit_enemy.ogg";
+static const std::string SFX_HIT_PLAYER = "assets/audio/sfx/hit_player.ogg";
 
 using namespace GameConstants;
 
@@ -71,6 +78,7 @@ static void resetGame(Player &player, Map *&map, FloorFactory &factory,
 
     player.reset();
     FloorFactory::spawnPlayer(player, *map);
+    MusicManager::instance().play(MUSIC_GAME);
 }
 
 // Ctrl+S / Ctrl+L / Ctrl+Q olaylarını işler
@@ -151,9 +159,17 @@ int main()
     HUD hud(font);
     Menu menu(font);
 
+    // SFX'leri önden yükle — ilk çalmada gecikme olmasın
+    SoundManager::instance().preload(SFX_HIT_ENEMY);
+    SoundManager::instance().preload(SFX_HIT_PLAYER);
+
     // Açılış menüsü — kullanıcı kapatırsa çık
+    MusicManager::instance().play(MUSIC_MENU);
     if (!menu.showStart(window))
         return 0;
+
+    // Oyun başladı — oyun müziğine geç
+    MusicManager::instance().play(MUSIC_GAME);
 
     // Mesaj kuyruğu
     std::vector<std::string> messages;
@@ -227,6 +243,7 @@ int main()
         // 6) Game over kontrolü
         if (!player.isAlive())
         {
+            MusicManager::instance().play(MUSIC_MENU);
             if (!menu.showGameOver(window, currentFloor))
                 break; // pencere kapandı
             resetGame(player, map, factory, currentFloor, messages, addMsg);
